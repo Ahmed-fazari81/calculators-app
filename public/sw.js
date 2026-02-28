@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hasibati-v2';
+const CACHE_NAME = 'hasibati-v3';
 const urlsToCache = [
   '/calculators-app/',
   '/calculators-app/index.html',
