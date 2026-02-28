@@ -62,6 +62,9 @@ export default function CurrencyConverter() {
     ? (parseFloat(amount || '0') * rates[toCurrency]).toFixed(3) 
     : '0.000';
 
+  const fromName = CURRENCIES.find(c => c.code === fromCurrency)?.name || fromCurrency;
+  const toName = CURRENCIES.find(c => c.code === toCurrency)?.name || toCurrency;
+
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-center justify-between">
@@ -178,7 +181,7 @@ export default function CurrencyConverter() {
           
           {rates[toCurrency] && !loading && (
             <div className="mt-6 pt-4 border-t border-amber-400/30 text-sm text-amber-100">
-              <p>سعر الصرف: 1 {fromCurrency} يعادل {rates[toCurrency]} {toCurrency}</p>
+              <p>سعر الصرف: 1 {fromName} يعادل {rates[toCurrency]} {toName}</p>
               <p className="text-xs mt-1 opacity-75">آخر تحديث للأسعار: {lastUpdated}</p>
             </div>
           )}
