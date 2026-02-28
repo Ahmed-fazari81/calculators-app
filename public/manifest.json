@@ -8,13 +8,13 @@
   "theme_color": "#10b981",
   "icons": [
     {
-      "src": "/calculators-app/icon-192.png",
+      "src": "/calculators-app/public/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/calculators-app/icon-512.png",
+      "src": "/calculators-app/public/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
