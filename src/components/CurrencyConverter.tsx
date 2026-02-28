@@ -13,6 +13,8 @@ const CURRENCIES = [
   { code: 'GBP', name: 'جنيه إسترليني', flag: '🇬🇧' },
   { code: 'EGP', name: 'جنيه مصري', flag: '🇪🇬' },
   { code: 'JOD', name: 'دينار أردني', flag: '🇯🇴' },
+  { code: 'IRR', name: 'ريال إيراني', flag: '🇮🇷' },
+  { code: 'INR', name: 'روبية هندية', flag: '🇮🇳' },
 ];
 
 export default function CurrencyConverter() {
@@ -176,7 +178,7 @@ export default function CurrencyConverter() {
           
           {rates[toCurrency] && !loading && (
             <div className="mt-6 pt-4 border-t border-amber-400/30 text-sm text-amber-100">
-              <p>سعر الصرف: 1 {fromCurrency} = {rates[toCurrency]} {toCurrency}</p>
+              <p>سعر الصرف: 1 {fromCurrency} يعادل {rates[toCurrency]} {toCurrency}</p>
               <p className="text-xs mt-1 opacity-75">آخر تحديث للأسعار: {lastUpdated}</p>
             </div>
           )}
