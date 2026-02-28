@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRightLeft, RefreshCw, DollarSign, RotateCcw } from 'lucide-react';
+import { ArrowRightLeft, RefreshCw, RotateCcw } from 'lucide-react';
 
 const CURRENCIES = [
   { code: 'OMR', name: 'ريال عماني', flag: '🇴🇲' },
@@ -18,7 +18,7 @@ const CURRENCIES = [
 export default function CurrencyConverter() {
   const [amount, setAmount] = useState<string>('1');
   const [fromCurrency, setFromCurrency] = useState('OMR');
-  const [toCurrency, setToCurrency] = useState('AED');
+  const [toCurrency, setToCurrency] = useState('USD');
   const [rates, setRates] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -53,7 +53,7 @@ export default function CurrencyConverter() {
   const reset = () => {
     setAmount('1');
     setFromCurrency('OMR');
-    setToCurrency('AED');
+    setToCurrency('USD');
   };
 
   const convertedAmount = rates[toCurrency] 
@@ -96,15 +96,12 @@ export default function CurrencyConverter() {
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">المبلغ</label>
             <div className="relative">
-              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                <DollarSign className="h-5 w-5 text-slate-400" />
-              </div>
               <input
                 type="number"
                 min="0"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="block w-full pl-3 pr-10 py-4 text-lg font-bold border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 rounded-xl border bg-slate-50 transition-all"
+                className="block w-full px-4 py-4 text-lg font-bold border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 rounded-xl border bg-slate-50 transition-all"
                 placeholder="أدخل المبلغ"
               />
             </div>
