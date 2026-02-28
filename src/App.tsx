@@ -36,7 +36,7 @@ export default function App() {
   };
 
   return (
-    <div className="h-screen bg-slate-50 flex flex-col md:flex-row overflow-hidden">
+    <div className="h-[100dvh] bg-slate-50 flex flex-col md:flex-row overflow-hidden">
       {/* Mobile Header */}
       <div className="md:hidden bg-white border-b border-slate-200 p-4 flex items-center justify-between flex-shrink-0 z-20">
         <div className="flex items-center gap-2">
@@ -102,13 +102,15 @@ export default function App() {
 
       {/* Main Content */}
       <main className="flex-1 p-4 md:p-8 lg:p-12 overflow-y-auto w-full flex flex-col relative">
-        <div className="max-w-4xl mx-auto w-full flex-1">
-          {renderContent()}
+        <div className="max-w-4xl mx-auto w-full flex-1 flex flex-col">
+          <div className="flex-1">
+            {renderContent()}
+          </div>
+          
+          <footer className="mt-12 pt-6 pb-6 md:pb-2 text-center text-sm text-slate-500 border-t border-slate-200 w-full shrink-0">
+            جميع الحقوق محفوظة للاستاذ احمد الفزاري &copy; {new Date().getFullYear()}
+          </footer>
         </div>
-        
-        <footer className="mt-12 pt-6 pb-2 text-center text-sm text-slate-500 border-t border-slate-200 max-w-4xl mx-auto w-full shrink-0">
-          جميع الحقوق محفوظة للاستاذ احمد الفزاري &copy; {new Date().getFullYear()}
-        </footer>
       </main>
     </div>
   );
