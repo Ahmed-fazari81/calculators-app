@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { RotateCcw, CalendarDays } from 'lucide-react';
 import { differenceInYears, differenceInMonths, differenceInDays, addYears, addMonths } from 'date-fns';
+import DateSelector from './DateSelector';
 
 export default function AgeCalculator() {
   const [birthDate, setBirthDate] = useState<string>('');
@@ -31,9 +32,9 @@ export default function AgeCalculator() {
     setAge({ years, months, days });
   };
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBirthDate(e.target.value);
-    calculateAge(e.target.value);
+  const handleDateChange = (newDate: string) => {
+    setBirthDate(newDate);
+    calculateAge(newDate);
   };
 
   const reset = () => {
@@ -56,25 +57,11 @@ export default function AgeCalculator() {
 
       <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
         <label className="block text-sm font-medium text-slate-700 mb-2">تاريخ الميلاد</label>
-        <div className="relative w-full py-3 px-4 border border-slate-200 rounded-xl bg-slate-50 focus-within:ring-2 focus-within:ring-emerald-500 focus-within:border-emerald-500 transition-all flex items-center justify-between overflow-hidden">
-          <input
-            type="date"
-            value={birthDate}
-            onChange={handleDateChange}
-            onClick={(e) => {
-              try {
-                if ('showPicker' in HTMLInputElement.prototype) {
-                  e.currentTarget.showPicker();
-                }
-              } catch (err) {}
-            }}
-            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-          />
-          <span className={`text-base sm:text-sm ${birthDate ? 'text-slate-900' : 'text-slate-400'}`}>
-            {birthDate ? birthDate : "اختر التاريخ لحساب عمرك بدقة"}
-          </span>
-          <CalendarDays className="h-5 w-5 text-slate-400 shrink-0" />
-        </div>
+        <DateSelector 
+          value={birthDate} 
+          onChange={handleDateChange} 
+          colorTheme="emerald" 
+        />
       </div>
 
       {age && (
