@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { RotateCcw, CalendarDays, Briefcase } from 'lucide-react';
 import { differenceInYears, differenceInMonths, differenceInDays, addYears, addMonths, format } from 'date-fns';
+import DateSelector from './DateSelector';
 
 export default function ExperienceCalculator() {
   const [startDate, setStartDate] = useState<string>('');
@@ -58,48 +59,22 @@ export default function ExperienceCalculator() {
       <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-2">تاريخ بداية العمل</label>
-          <div className="relative w-full py-3 px-4 border border-slate-200 rounded-xl bg-slate-50 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-all flex items-center justify-between overflow-hidden">
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              onClick={(e) => {
-                try {
-                  if ('showPicker' in HTMLInputElement.prototype) {
-                    e.currentTarget.showPicker();
-                  }
-                } catch (err) {}
-              }}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-            />
-            <span className={`text-base sm:text-sm ${startDate ? 'text-slate-900' : 'text-slate-400'}`}>
-              {startDate ? startDate : "اختر التاريخ"}
-            </span>
-            <Briefcase className="h-5 w-5 text-slate-400 shrink-0" />
-          </div>
+          <DateSelector 
+            value={startDate} 
+            onChange={setStartDate} 
+            icon={<Briefcase className="w-5 h-5 text-slate-400" />}
+            colorTheme="blue" 
+          />
         </div>
 
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-2">تاريخ نهاية العمل (أو اليوم)</label>
-          <div className="relative w-full py-3 px-4 border border-slate-200 rounded-xl bg-slate-50 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-all flex items-center justify-between overflow-hidden">
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              onClick={(e) => {
-                try {
-                  if ('showPicker' in HTMLInputElement.prototype) {
-                    e.currentTarget.showPicker();
-                  }
-                } catch (err) {}
-              }}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-            />
-            <span className={`text-base sm:text-sm ${endDate ? 'text-slate-900' : 'text-slate-400'}`}>
-              {endDate ? endDate : "اختر التاريخ"}
-            </span>
-            <CalendarDays className="h-5 w-5 text-slate-400 shrink-0" />
-          </div>
+          <DateSelector 
+            value={endDate} 
+            onChange={setEndDate} 
+            icon={<CalendarDays className="w-5 h-5 text-slate-400" />}
+            colorTheme="blue" 
+          />
         </div>
       </div>
 
