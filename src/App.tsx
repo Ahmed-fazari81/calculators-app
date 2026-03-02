@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { Calculator, Calendar, Briefcase, Landmark, Tag, Menu, X, DollarSign } from 'lucide-react';
+import { Calculator, Calendar, Briefcase, Landmark, Tag, Menu, X, DollarSign, Coins, HeartHandshake } from 'lucide-react';
 import BasicCalculator from './components/BasicCalculator';
 import AgeCalculator from './components/AgeCalculator';
 import ExperienceCalculator from './components/ExperienceCalculator';
 import LoanCalculator from './components/LoanCalculator';
 import DiscountCalculator from './components/DiscountCalculator';
 import CurrencyConverter from './components/CurrencyConverter';
+import GoldCalculator from './components/GoldCalculator';
+import ZakatCalculator from './components/ZakatCalculator';
 import { cn } from './lib/utils';
 
-type Tab = 'basic' | 'age' | 'experience' | 'loan' | 'discount' | 'currency';
+type Tab = 'basic' | 'age' | 'experience' | 'loan' | 'discount' | 'currency' | 'gold' | 'zakat';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>('basic');
@@ -21,6 +23,8 @@ export default function App() {
     { id: 'loan', label: 'القروض البنكية', icon: Landmark, color: 'text-indigo-600', bg: 'bg-indigo-100' },
     { id: 'discount', label: 'التخفيضات', icon: Tag, color: 'text-rose-600', bg: 'bg-rose-100' },
     { id: 'currency', label: 'محول العملات', icon: DollarSign, color: 'text-amber-600', bg: 'bg-amber-100' },
+    { id: 'gold', label: 'حاسبة الذهب', icon: Coins, color: 'text-yellow-600', bg: 'bg-yellow-100' },
+    { id: 'zakat', label: 'حاسبة الزكاة', icon: HeartHandshake, color: 'text-teal-600', bg: 'bg-teal-100' },
   ] as const;
 
   const renderContent = () => {
@@ -31,6 +35,8 @@ export default function App() {
       case 'loan': return <LoanCalculator />;
       case 'discount': return <DiscountCalculator />;
       case 'currency': return <CurrencyConverter />;
+      case 'gold': return <GoldCalculator />;
+      case 'zakat': return <ZakatCalculator />;
       default: return null;
     }
   };
