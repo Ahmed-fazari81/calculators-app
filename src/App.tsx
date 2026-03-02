@@ -44,7 +44,7 @@ export default function App() {
   return (
     <div className="h-[100dvh] bg-slate-50 flex flex-col md:flex-row overflow-hidden">
       {/* Mobile Header */}
-      <div className="md:hidden bg-white border-b border-slate-200 p-4 flex items-center justify-between flex-shrink-0 z-20">
+      <div className="md:hidden bg-white border-b border-slate-200 p-4 flex items-center justify-between flex-shrink-0 z-50 relative">
         <div className="flex items-center gap-2">
           <div className="bg-emerald-600 p-2 rounded-lg">
             <Calculator className="w-5 h-5 text-white" />
@@ -61,7 +61,7 @@ export default function App() {
 
       {/* Sidebar Navigation */}
       <nav className={cn(
-        "bg-white border-l border-slate-200 w-full md:w-72 flex-shrink-0 transition-all duration-300 z-10 overflow-y-auto",
+        "bg-white border-l border-slate-200 w-full md:w-72 flex-shrink-0 transition-all duration-300 z-40 overflow-y-auto",
         "md:relative md:block md:h-full",
         isMobileMenuOpen ? "block absolute top-[73px] left-0 right-0 bottom-0" : "hidden"
       )}>
