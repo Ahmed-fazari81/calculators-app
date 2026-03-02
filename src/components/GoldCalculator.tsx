@@ -1,18 +1,49 @@
-import React, { useState } from 'react';
-import { RotateCcw, Coins, Scale, HandCoins } from 'lucide-react';
-
-// أسعار تقريبية للذهب بالريال العماني (يمكن تحديثها لاحقاً بربطها بـ API)
-const GOLD_PRICES: Record<string, number> = {
-  '24': 31.50,
-  '22': 28.90,
-  '21': 27.60,
-  '18': 23.60,
-};
+import React, { useState, useEffect } from 'react';
+import { RotateCcw, Coins, Scale, HandCoins, RefreshCw } from 'lucide-react';
 
 export default function GoldCalculator() {
   const [karat, setKarat] = useState<string>('21');
   const [weight, setWeight] = useState<string>('');
   const [makingCharge, setMakingCharge] = useState<string>('');
+  
+  const [goldPrices, setGoldPrices] = useState<Record<string, number>>({
+    '24': 31.50,
+    '22': 28.90,
+    '21': 27.60,
+    '18': 23.60,
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState('');
+
+  const fetchGoldPrices = async () => {
+    setLoading(true);
+    setError(false);
+    try {
+      const res = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/xau.json');
+      if (!res.ok) throw new Error('Network response was not ok');
+      const data = await res.json();
+      
+      const ounceInOmr = data.xau.omr;
+      const gram24k = ounceInOmr / 31.1034768; // 1 Troy Ounce = 31.1034768 grams
+      
+      setGoldPrices({
+        '24': gram24k,
+        '22': gram24k * (22 / 24),
+        '21': gram24k * (21 / 24),
+        '18': gram24k * (18 / 24),
+      });
+      setLastUpdated(new Date().toLocaleTimeString('ar-OM', { hour: '2-digit', minute: '2-digit' }));
+    } catch (err) {
+      console.error("Failed to fetch gold prices", err);
+      setError(true);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchGoldPrices();
+  }, []);
 
   const reset = () => {
     setKarat('21');
@@ -23,7 +54,7 @@ export default function GoldCalculator() {
   const parsedWeight = parseFloat(weight) || 0;
   const parsedMakingCharge = parseFloat(makingCharge) || 0;
   
-  const pureGoldPrice = parsedWeight * GOLD_PRICES[karat];
+  const pureGoldPrice = parsedWeight * (goldPrices[karat] || 0);
   const totalMakingCharge = parsedWeight * parsedMakingCharge;
   const finalTotalPrice = pureGoldPrice + totalMakingCharge;
 
@@ -31,30 +62,50 @@ export default function GoldCalculator() {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-slate-800">حاسبة الذهب</h2>
-        <button 
-          onClick={reset}
-          className="p-2 text-slate-400 hover:text-yellow-600 hover:bg-yellow-50 rounded-full transition-colors"
-          title="إعادة تعيين"
-        >
-          <RotateCcw className="w-5 h-5" />
-        </button>
+        <div className="flex gap-2">
+          <button 
+            onClick={reset}
+            className="p-2 text-slate-400 hover:text-yellow-600 hover:bg-yellow-50 rounded-full transition-colors"
+            title="إعادة تعيين"
+          >
+            <RotateCcw className="w-5 h-5" />
+          </button>
+          <button 
+            onClick={fetchGoldPrices}
+            disabled={loading}
+            className={`p-2 text-slate-400 hover:text-yellow-600 hover:bg-yellow-50 rounded-full transition-all ${loading ? 'animate-spin text-yellow-500' : ''}`}
+            title="تحديث الأسعار"
+          >
+            <RefreshCw className="w-5 h-5" />
+          </button>
+        </div>
       </div>
 
+      {error && (
+        <div className="bg-rose-50 text-rose-600 p-3 rounded-xl text-sm text-center border border-rose-100">
+          تعذر جلب أسعار الذهب المباشرة. يتم عرض آخر أسعار مسجلة.
+        </div>
+      )}
+
       {/* أسعار الذهب اليوم */}
-      <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 text-white shadow-md">
+      <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 text-white shadow-md relative overflow-hidden">
         <h3 className="text-lg font-semibold mb-4 text-yellow-400 flex items-center gap-2">
           <Coins className="w-5 h-5" />
           متوسط أسعار الذهب اليوم (للجرام)
         </h3>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {Object.entries(GOLD_PRICES).reverse().map(([k, price]) => (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 relative z-10">
+          {Object.entries(goldPrices).reverse().map(([k, price]) => (
             <div key={k} className="bg-white/10 rounded-xl p-3 text-center backdrop-blur-sm border border-white/5">
               <div className="text-slate-300 text-sm mb-1">عيار {k}</div>
-              <div className="font-bold text-lg text-yellow-400">{price.toFixed(2)} <span className="text-xs font-normal text-slate-300">ر.ع</span></div>
+              <div className="font-bold text-lg text-yellow-400">
+                {loading ? '...' : price.toFixed(2)} <span className="text-xs font-normal text-slate-300">ر.ع</span>
+              </div>
             </div>
           ))}
         </div>
-        <p className="text-xs text-slate-400 mt-4 text-center">الأسعار تقريبية وقد تختلف قليلاً حسب السوق المحلي</p>
+        {lastUpdated && !loading && (
+          <p className="text-xs text-slate-400 mt-4 text-center">آخر تحديث للأسعار: {lastUpdated}</p>
+        )}
       </div>
 
       <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
