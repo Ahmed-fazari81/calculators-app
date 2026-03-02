@@ -1,18 +1,44 @@
-import React, { useState } from 'react';
-import { RotateCcw, HeartHandshake, Info } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { RotateCcw, HeartHandshake, Info, RefreshCw } from 'lucide-react';
 
-// نصاب الزكاة يعادل 85 جرام من الذهب عيار 24
-// بناءً على سعر 31.50 للجرام، النصاب التقريبي هو 2677.5 ريال عماني
-const NISAB_OMR = 2677.5;
 const ZAKAT_RATE = 0.025; // 2.5%
 
 export default function ZakatCalculator() {
   const [wealth, setWealth] = useState<string>('');
+  const [goldPrice24k, setGoldPrice24k] = useState<number>(31.50);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState('');
+
+  const fetchGoldPrice = async () => {
+    setLoading(true);
+    setError(false);
+    try {
+      const res = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/xau.json');
+      if (!res.ok) throw new Error('Network response was not ok');
+      const data = await res.json();
+      
+      const ounceInOmr = data.xau.omr;
+      const gram24k = ounceInOmr / 31.1034768; // 1 Troy Ounce = 31.1034768 grams
+      
+      setGoldPrice24k(gram24k);
+      setLastUpdated(new Date().toLocaleTimeString('ar-OM', { hour: '2-digit', minute: '2-digit' }));
+    } catch (err) {
+      console.error("Failed to fetch gold price", err);
+      setError(true);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchGoldPrice();
+  }, []);
 
   const reset = () => {
     setWealth('');
   };
 
+  const NISAB_OMR = goldPrice24k * 85;
   const parsedWealth = parseFloat(wealth) || 0;
   const isEligible = parsedWealth >= NISAB_OMR;
   const zakatAmount = isEligible ? parsedWealth * ZAKAT_RATE : 0;
@@ -21,27 +47,55 @@ export default function ZakatCalculator() {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-slate-800">حاسبة الزكاة</h2>
-        <button 
-          onClick={reset}
-          className="p-2 text-slate-400 hover:text-teal-600 hover:bg-teal-50 rounded-full transition-colors"
-          title="إعادة تعيين"
-        >
-          <RotateCcw className="w-5 h-5" />
-        </button>
+        <div className="flex gap-2">
+          <button 
+            onClick={reset}
+            className="p-2 text-slate-400 hover:text-teal-600 hover:bg-teal-50 rounded-full transition-colors"
+            title="إعادة تعيين"
+          >
+            <RotateCcw className="w-5 h-5" />
+          </button>
+          <button 
+            onClick={fetchGoldPrice}
+            disabled={loading}
+            className={`p-2 text-slate-400 hover:text-teal-600 hover:bg-teal-50 rounded-full transition-all ${loading ? 'animate-spin text-teal-500' : ''}`}
+            title="تحديث الأسعار"
+          >
+            <RefreshCw className="w-5 h-5" />
+          </button>
+        </div>
       </div>
 
+      {error && (
+        <div className="bg-rose-50 text-rose-600 p-3 rounded-xl text-sm text-center border border-rose-100">
+          تعذر جلب أسعار الذهب المباشرة لحساب النصاب. يتم استخدام آخر سعر مسجل.
+        </div>
+      )}
+
       {/* معلومات النصاب */}
-      <div className="bg-teal-50 border border-teal-100 rounded-2xl p-5 flex gap-4 items-start">
-        <div className="bg-teal-100 p-2 rounded-full shrink-0 mt-1">
+      <div className="bg-teal-50 border border-teal-100 rounded-2xl p-5 flex gap-4 items-start relative overflow-hidden">
+        <div className="bg-teal-100 p-2 rounded-full shrink-0 mt-1 relative z-10">
           <Info className="w-5 h-5 text-teal-600" />
         </div>
-        <div>
-          <h3 className="font-bold text-teal-800 mb-1">نصاب زكاة المال (لهذا العام)</h3>
+        <div className="relative z-10">
+          <h3 className="font-bold text-teal-800 mb-1">نصاب زكاة المال (محدث تلقائياً)</h3>
           <p className="text-teal-700 text-sm leading-relaxed">
             تجب الزكاة في المال إذا بلغ النصاب وحال عليه الحول (مرور سنة هجرية كاملة). 
-            نصاب المال يقدر بقيمة 85 جراماً من الذهب عيار 24، وهو يعادل حالياً حوالي <span className="font-bold">{NISAB_OMR.toLocaleString()} ريال عماني</span>.
-            مقدار الزكاة الواجب إخراجها هو ربع العشر (2.5%).
+            نصاب المال يقدر بقيمة 85 جراماً من الذهب عيار 24.
           </p>
+          <div className="mt-3 bg-white/60 rounded-lg p-3 border border-teal-200/50">
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-teal-800 text-sm">سعر جرام الذهب (عيار 24):</span>
+              <span className="font-bold text-teal-900">{loading ? '...' : goldPrice24k.toFixed(2)} ر.ع</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-teal-800 text-sm">قيمة النصاب (85 جرام):</span>
+              <span className="font-bold text-teal-900">{loading ? '...' : NISAB_OMR.toLocaleString(undefined, { maximumFractionDigits: 2 })} ر.ع</span>
+            </div>
+            {lastUpdated && !loading && (
+              <div className="text-xs text-teal-600 mt-2 text-left">آخر تحديث: {lastUpdated}</div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -96,7 +150,7 @@ export default function ZakatCalculator() {
                 </div>
                 <h3 className="text-xl font-bold text-slate-700 mb-2">لم يبلغ النصاب</h3>
                 <p className="text-slate-500">
-                  المبلغ المدخل ({parsedWealth.toLocaleString()} ر.ع) أقل من حد النصاب الموجب للزكاة ({NISAB_OMR.toLocaleString()} ر.ع). لا تجب فيه الزكاة.
+                  المبلغ المدخل ({parsedWealth.toLocaleString()} ر.ع) أقل من حد النصاب الموجب للزكاة ({NISAB_OMR.toLocaleString(undefined, { maximumFractionDigits: 2 })} ر.ع). لا تجب فيه الزكاة.
                 </p>
               </div>
             )}
