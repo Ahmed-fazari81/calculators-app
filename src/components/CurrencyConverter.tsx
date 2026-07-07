@@ -13,7 +13,7 @@ const CURRENCIES = [
   { code: 'GBP', name: 'جنيه إسترليني', flag: '🇬🇧' },
   { code: 'EGP', name: 'جنيه مصري', flag: '🇪🇬' },
   { code: 'JOD', name: 'دينار أردني', flag: '🇯🇴' },
-  { code: 'IRR', name: 'ريال إيراني', flag: '🇮🇷' },
+  { code: 'IRR', name: 'تومان إيراني', flag: '🇮🇷' },
   { code: 'INR', name: 'روبية هندية', flag: '🇮🇳' },
 ];
 
