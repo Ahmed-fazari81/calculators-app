@@ -48,7 +48,7 @@ export default function ZakatCalculator() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-slate-800">حاسبة الزكاة</h2>
-          <p className="text-xs text-slate-400 mt-1">يلزم الاتصال بالإنترنت لتحديث سعر الذهب المستخدم في حساب النصاب</p>
+          <p className="text-xs text-red-600 mt-1">يلزم الاتصال بالإنترنت لتحديث سعر الذهب المستخدم في حساب النصاب</p>
         </div>
         <div className="flex gap-2">
           <button 
