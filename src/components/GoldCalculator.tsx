@@ -94,7 +94,7 @@ export default function GoldCalculator() {
           متوسط أسعار الذهب اليوم (للجرام)
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 relative z-10">
-          {Object.entries(goldPrices).reverse().map(([k, price]) => (
+          {(Object.entries(goldPrices) as [string, number][]).reverse().map(([k, price]) => (
             <div key={k} className="bg-white/10 rounded-xl p-3 text-center backdrop-blur-sm border border-white/5">
               <div className="text-slate-300 text-sm mb-1">عيار {k}</div>
               <div className="font-bold text-lg text-yellow-400">
