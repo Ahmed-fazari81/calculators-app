@@ -61,7 +61,10 @@ export default function GoldCalculator() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-slate-800">حاسبة الذهب</h2>
+        <div>
+          <h2 className="text-2xl font-bold text-slate-800">حاسبة الذهب</h2>
+          <p className="text-xs text-slate-400 mt-1">يلزم الاتصال بالإنترنت لتحديث الأسعار</p>
+        </div>
         <div className="flex gap-2">
           <button 
             onClick={reset}
