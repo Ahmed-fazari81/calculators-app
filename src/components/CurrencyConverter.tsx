@@ -70,7 +70,7 @@ export default function CurrencyConverter() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-slate-800">محول العملات</h2>
-          <p className="text-xs text-slate-400 mt-1">يلزم الاتصال بالإنترنت لتحديث الأسعار</p>
+          <p className="text-xs text-red-600 mt-1">يلزم الاتصال بالإنترنت لتحديث الأسعار</p>
         </div>
         <div className="flex gap-2">
           <button 
