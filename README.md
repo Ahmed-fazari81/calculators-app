@@ -1,20 +1,27 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# المحاسب الشامل
 
-# Run and deploy your AI Studio app
+تطبيق ويب (PWA) يضم مجموعة حاسبات عربية بواجهة RTL:
 
-This contains everything you need to run your app locally.
+- الحاسبة السريعة
+- حاسبة العمر
+- حاسبة سنوات الخبرة
+- حاسبة القروض البنكية
+- حاسبة التخفيضات
+- محول العملات (أسعار صرف حية)
+- حاسبة الذهب
+- حاسبة الزكاة
 
-View your app in AI Studio: https://ai.studio/apps/36eb7f3e-5ba6-4796-b077-571fc11c15e3
+مبني باستخدام React + TypeScript + Vite + Tailwind CSS.
 
-## Run Locally
+## التشغيل محليًا
 
-**Prerequisites:**  Node.js
+**المتطلبات:** Node.js
 
-
-1. Install dependencies:
+1. تثبيت الاعتماديات:
    `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
+2. تشغيل التطبيق:
    `npm run dev`
+3. بناء نسخة الإنتاج:
+   `npm run build`
+
+النسخة المنشورة متاحة على: https://ahmed-fazari81.github.io/calculators-app/
