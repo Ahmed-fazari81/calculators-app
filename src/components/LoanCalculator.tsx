@@ -1,17 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { RotateCcw, Landmark, Clock, Percent, Info } from 'lucide-react';
+import { RotateCcw, Landmark, Clock, Percent, Info, Plus, Minus } from 'lucide-react';
+
+type Method = 'reducing' | 'flat';
+
+interface ScheduleRow {
+  month: number;
+  payment: number;
+  principal: number;
+  interest: number;
+  balance: number;
+}
+
+interface LoanResult {
+  monthlyPayment: number;
+  totalPayment: number;
+  totalInterest: number;
+  schedule: ScheduleRow[];
+}
 
 export default function LoanCalculator() {
   const [loanAmount, setLoanAmount] = useState<string>('');
   const [interestRate, setInterestRate] = useState<string>('');
   const [years, setYears] = useState<string>('');
   const [months, setMonths] = useState<string>('');
+  const [method, setMethod] = useState<Method>('reducing');
+  const [showSchedule, setShowSchedule] = useState(false);
 
-  const [result, setResult] = useState<{
-    monthlyPayment: number;
-    totalPayment: number;
-    totalInterest: number;
-  } | null>(null);
+  const [result, setResult] = useState<LoanResult | null>(null);
 
   const handleYearsChange = (val: string) => {
     setYears(val);
@@ -30,27 +45,68 @@ export default function LoanCalculator() {
     const rate = parseFloat(interestRate) || 0;
     const termMonths = parseFloat(months) || 0;
 
-    if (principal <= 0 || rate <= 0 || termMonths <= 0) {
+    if (principal <= 0 || rate < 0 || termMonths <= 0) {
       setResult(null);
       return;
     }
 
-    // Standard amortized loan calculation
     const monthlyRate = rate / 100 / 12;
-    const monthlyPayment = principal * (monthlyRate * Math.pow(1 + monthlyRate, termMonths)) / (Math.pow(1 + monthlyRate, termMonths) - 1);
-    const totalPayment = monthlyPayment * termMonths;
-    const totalInterest = totalPayment - principal;
+    const schedule: ScheduleRow[] = [];
+    let monthlyPayment: number;
+    let totalPayment: number;
+    let totalInterest: number;
 
-    setResult({
-      monthlyPayment,
-      totalPayment,
-      totalInterest
-    });
+    if (method === 'flat') {
+      // Fixed installment: interest is calculated once on the original principal for the whole term
+      totalInterest = principal * (rate / 100) * (termMonths / 12);
+      totalPayment = principal + totalInterest;
+      monthlyPayment = totalPayment / termMonths;
+
+      const monthlyPrincipal = principal / termMonths;
+      const monthlyInterest = totalInterest / termMonths;
+      let balance = principal;
+      for (let m = 1; m <= termMonths; m++) {
+        balance -= monthlyPrincipal;
+        schedule.push({
+          month: m,
+          payment: monthlyPayment,
+          principal: monthlyPrincipal,
+          interest: monthlyInterest,
+          balance: Math.max(balance, 0),
+        });
+      }
+    } else {
+      // Declining/reducing balance: interest is recalculated each month on the remaining balance
+      if (rate === 0) {
+        monthlyPayment = principal / termMonths;
+      } else {
+        monthlyPayment = principal * (monthlyRate * Math.pow(1 + monthlyRate, termMonths)) / (Math.pow(1 + monthlyRate, termMonths) - 1);
+      }
+
+      let balance = principal;
+      for (let m = 1; m <= termMonths; m++) {
+        const interestPortion = balance * monthlyRate;
+        const principalPortion = monthlyPayment - interestPortion;
+        balance -= principalPortion;
+        schedule.push({
+          month: m,
+          payment: monthlyPayment,
+          principal: principalPortion,
+          interest: interestPortion,
+          balance: Math.max(balance, 0),
+        });
+      }
+
+      totalPayment = monthlyPayment * termMonths;
+      totalInterest = totalPayment - principal;
+    }
+
+    setResult({ monthlyPayment, totalPayment, totalInterest, schedule });
   };
 
   useEffect(() => {
     calculateLoan();
-  }, [loanAmount, interestRate, months]);
+  }, [loanAmount, interestRate, months, method]);
 
   const reset = () => {
     setLoanAmount('');
@@ -58,13 +114,14 @@ export default function LoanCalculator() {
     setYears('');
     setMonths('');
     setResult(null);
+    setShowSchedule(false);
   };
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-slate-800">حاسبة القروض البنكية</h2>
-        <button 
+        <button
           onClick={reset}
           className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-colors"
           title="إعادة تعيين"
@@ -77,7 +134,7 @@ export default function LoanCalculator() {
         <Info className="w-6 h-6 shrink-0 mt-0.5 text-indigo-600" />
         <div className="space-y-3 w-full">
           <p className="font-bold text-base">ملاحظات هامة حول القروض:</p>
-          
+
           <div className="bg-white/60 p-3 rounded-lg border border-indigo-100/50">
             <p className="font-semibold text-indigo-900 mb-1">1. لماذا يختلف القسط الفعلي عن الحاسبة؟</p>
             <p className="leading-relaxed mb-2">
@@ -105,10 +162,60 @@ export default function LoanCalculator() {
               الخلاصة: في الـ 10 سنوات، أنت تدفع قسطاً أريح، لكنك تدفع للبنك أكثر من ضعف الفوائد!
             </p>
           </div>
+
+          <div className="bg-indigo-100/50 p-3 rounded-lg border border-indigo-200/50">
+            <p className="font-semibold text-indigo-900 mb-1">3. الفائدة الثابتة مقابل الفائدة المتناقصة:</p>
+            <p className="leading-relaxed">
+              <strong>الفائدة الثابتة (Flat):</strong> تُحسب مرة واحدة على كامل مبلغ القرض الأصلي طوال المدة، فتبقى حصة الفائدة في كل قسط ثابتة.
+              <strong> الفائدة المتناقصة (Reducing):</strong> تُحسب شهرياً على الرصيد المتبقي فقط، فتقل حصة الفائدة تدريجياً كلما سددت أكثر — وهي الطريقة الأكثر شيوعاً في معظم القروض الشخصية بالبنوك التجارية.
+            </p>
+          </div>
+
+          <div className="bg-white/60 p-3 rounded-lg border border-indigo-100/50">
+            <p className="font-semibold text-indigo-900 mb-1">4. البنك التقليدي مقابل البنك الإسلامي:</p>
+            <p className="leading-relaxed mb-2">
+              الفرق بينهما <strong>شرعي وتعاقدي وليس رياضياً</strong>. البنك التقليدي يقرضك مبلغاً مقابل فائدة على الدين، أما البنك الإسلامي (كبنك نزوى، العز الإسلامي، وميثاق التابع لبنك مسقط) فلا يتعامل بالفائدة، بل بعقود بيع أو إيجار أو شراكة:
+            </p>
+            <ul className="list-disc list-inside space-y-1 text-indigo-700 pr-2">
+              <li><strong>المرابحة:</strong> البنك يشتري السلعة ويبيعها لك بسعر (التكلفة + هامش ربح ثابت متفق عليه مسبقاً لا يتغير) — يطابق رياضياً وضع <strong>"قسط ثابت (Flat)"</strong> أعلاه.</li>
+              <li><strong>الإجارة المنتهية بالتمليك / المشاركة المتناقصة:</strong> تشتري حصة البنك تدريجياً وتدفع إيجاراً على حصته المتبقية، والإيجار يتناقص كلما زادت ملكيتك — يطابق رياضياً وضع <strong>"قسط متناقص (Reducing)"</strong> أعلاه.</li>
+            </ul>
+            <p className="leading-relaxed mt-2">
+              لذلك يمكنك استخدام هذه الحاسبة بغض النظر عن نوع البنك، مع اعتبار النسبة المدخلة "نسبة ربح/إيجار" بدل "فائدة" في حالة التمويل الإسلامي.
+            </p>
+            <p className="mt-2 text-xs font-bold text-amber-700 bg-amber-50 p-2 rounded inline-block">
+              تنبيه: عند السداد المبكر، البنوك الإسلامية غالباً ملزمة نظاماً بمنح خصم "الإبراء" عن الربح غير المستحق، بينما البنوك التقليدية قد تفرض رسوم سداد مبكر بدلاً من ذلك — وهذا الفرق غير محتسب في هذه الحاسبة حالياً.
+            </p>
+          </div>
         </div>
       </div>
 
       <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
+        {/* Method Toggle */}
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-2">طريقة حساب الفائدة</label>
+          <div className="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xl">
+            <button
+              type="button"
+              onClick={() => setMethod('reducing')}
+              className={`py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                method === 'reducing' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              قسط متناقص (Reducing)
+            </button>
+            <button
+              type="button"
+              onClick={() => setMethod('flat')}
+              className={`py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                method === 'flat' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              قسط ثابت (Flat)
+            </button>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">مبلغ التمويل (الأساسي)</label>
@@ -131,7 +238,7 @@ export default function LoanCalculator() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">نسبة الفائدة / الربح السنوية</label>
+            <label className="block text-sm font-medium text-slate-700 mb-2">نسبة الفائدة / المرابحة / الإجارة السنوية</label>
             <div className="relative">
               <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                 <Percent className="h-5 w-5 text-slate-400" />
@@ -143,7 +250,7 @@ export default function LoanCalculator() {
                 value={interestRate}
                 onChange={(e) => setInterestRate(e.target.value)}
                 className="block w-full pl-3 pr-10 py-3 text-base border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-xl border bg-slate-50"
-                placeholder="مثال: 5.05"
+                placeholder="مثال: 5.05 (أو 0 لقرض بدون فائدة)"
               />
             </div>
           </div>
@@ -188,38 +295,83 @@ export default function LoanCalculator() {
       </div>
 
       {result && (
-        <div className="bg-indigo-600 text-white p-6 rounded-2xl shadow-lg relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="1"/>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid)" />
-            </svg>
-          </div>
-          
-          <div className="relative z-10">
-            <div className="text-center mb-6">
-              <p className="text-indigo-200 font-medium mb-1">القسط الشهري المتوقع</p>
-              <div className="text-4xl md:text-5xl font-bold">
-                {result.monthlyPayment.toFixed(3)} <span className="text-xl font-normal opacity-80">ر.ع.</span>
+        <>
+          <div className="bg-indigo-600 text-white p-6 rounded-2xl shadow-lg relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+              <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="1"/>
+                  </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid)" />
+              </svg>
+            </div>
+
+            <div className="relative z-10">
+              <div className="text-center mb-6">
+                <p className="text-indigo-200 font-medium mb-1">القسط الشهري المتوقع</p>
+                <div className="text-4xl md:text-5xl font-bold">
+                  {result.monthlyPayment.toFixed(3)} <span className="text-xl font-normal opacity-80">ر.ع.</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-indigo-500/50 pt-6">
+                <div className="text-center">
+                  <p className="text-indigo-200 text-sm mb-1">إجمالي الفوائد / الأرباح</p>
+                  <p className="font-semibold text-lg">{result.totalInterest.toFixed(3)} ر.ع.</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-indigo-200 text-sm mb-1">المبلغ الإجمالي للسداد</p>
+                  <p className="font-semibold text-lg">{result.totalPayment.toFixed(3)} ر.ع.</p>
+                </div>
               </div>
             </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-indigo-500/50 pt-6">
-              <div className="text-center">
-                <p className="text-indigo-200 text-sm mb-1">إجمالي الفوائد / الأرباح</p>
-                <p className="font-semibold text-lg">{result.totalInterest.toFixed(3)} ر.ع.</p>
-              </div>
-              <div className="text-center">
-                <p className="text-indigo-200 text-sm mb-1">المبلغ الإجمالي للسداد</p>
-                <p className="font-semibold text-lg">{result.totalPayment.toFixed(3)} ر.ع.</p>
-              </div>
-            </div>
           </div>
-        </div>
+
+          {/* Payment Schedule (expand/collapse) */}
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            <button
+              type="button"
+              onClick={() => setShowSchedule((prev) => !prev)}
+              className="w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-colors"
+            >
+              <span className="font-semibold text-slate-800">
+                جدول الدفعات التفصيلي ({result.schedule.length} دفعة)
+              </span>
+              <span className={`p-1.5 rounded-full transition-colors ${showSchedule ? 'bg-indigo-100 text-indigo-600' : 'bg-slate-100 text-slate-500'}`}>
+                {showSchedule ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+              </span>
+            </button>
+
+            {showSchedule && (
+              <div className="border-t border-slate-100 max-h-96 overflow-y-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-slate-50 sticky top-0">
+                    <tr className="text-slate-600">
+                      <th className="p-3 text-right font-semibold">#</th>
+                      <th className="p-3 text-right font-semibold">القسط</th>
+                      <th className="p-3 text-right font-semibold">أصل</th>
+                      <th className="p-3 text-right font-semibold">فائدة</th>
+                      <th className="p-3 text-right font-semibold">الرصيد المتبقي</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {result.schedule.map((row) => (
+                      <tr key={row.month} className="border-t border-slate-100 text-slate-700">
+                        <td className="p-3 text-slate-400">{row.month}</td>
+                        <td className="p-3 font-medium">{row.payment.toFixed(3)}</td>
+                        <td className="p-3">{row.principal.toFixed(3)}</td>
+                        <td className="p-3">{row.interest.toFixed(3)}</td>
+                        <td className="p-3">{row.balance.toFixed(3)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </>
       )}
     </div>
   );
