@@ -165,9 +165,17 @@ export default function LoanCalculator() {
 
           <div className="bg-indigo-100/50 p-3 rounded-lg border border-indigo-200/50">
             <p className="font-semibold text-indigo-900 mb-1">3. الفائدة الثابتة مقابل الفائدة المتناقصة:</p>
-            <p className="leading-relaxed">
+            <p className="leading-relaxed mb-2">
               <strong>الفائدة الثابتة (Flat):</strong> تُحسب مرة واحدة على كامل مبلغ القرض الأصلي طوال المدة، فتبقى حصة الفائدة في كل قسط ثابتة.
               <strong> الفائدة المتناقصة (Reducing):</strong> تُحسب شهرياً على الرصيد المتبقي فقط، فتقل حصة الفائدة تدريجياً كلما سددت أكثر — وهي الطريقة الأكثر شيوعاً في معظم القروض الشخصية بالبنوك التجارية.
+            </p>
+            <p className="font-medium mb-1">مثال توضيحي (لنفس قرض 33,000 ر.ع بنسبة 5% لمدة 10 سنوات):</p>
+            <ul className="list-disc list-inside space-y-1 text-indigo-800 pr-2">
+              <li><strong>فائدة ثابتة:</strong> القسط 412.5 ر.ع ⟵ (إجمالي الفوائد = <strong>16,500 ر.ع</strong>)</li>
+              <li><strong>فائدة متناقصة:</strong> القسط 350 ر.ع ⟵ (إجمالي الفوائد = <strong>9,001 ر.ع</strong>)</li>
+            </ul>
+            <p className="mt-2 text-xs font-bold text-rose-600 bg-rose-50 p-2 rounded inline-block">
+              نفس المبلغ ونفس النسبة المعلنة، لكن الفائدة الثابتة أغلى بكثير (يقارب ضعف الفوائد تقريباً) لأنها تُحسب على كامل المبلغ الأصلي طوال المدة دون أن تقل — لذلك يجب دائماً السؤال عن طريقة الحساب وليس النسبة فقط.
             </p>
           </div>
 
