@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Calculator, Calendar, Briefcase, Landmark, Tag, ChevronRight, DollarSign, Coins, HeartHandshake, Sun, Moon } from 'lucide-react';
+import { Calculator, Calendar, Briefcase, Landmark, Tag, ChevronRight, DollarSign, Coins, HeartHandshake, Sun, Moon, Smartphone, X, Copy, Check } from 'lucide-react';
 import BasicCalculator from './components/BasicCalculator';
 import AgeCalculator from './components/AgeCalculator';
 import ExperienceCalculator from './components/ExperienceCalculator';
@@ -23,6 +23,14 @@ const tabs = [
   { id: 'zakat', label: 'حاسبة الزكاة', icon: HeartHandshake, color: 'text-teal-600 dark:text-teal-400', bg: 'bg-teal-100 dark:bg-teal-900/40' },
 ] as const;
 
+// Bump this id whenever the app icon changes, to re-show the notice to everyone.
+const ICON_UPDATE_NOTICE_ID = 'icon-update-2026-08-21';
+
+// The app's public URL, shown in the icon-update notice so users can copy it
+// and reinstall the home-screen shortcut themselves. Update this single line
+// if the app ever moves to a new host (e.g. Netlify).
+const APP_URL = 'https://ahmed-fazari81.github.io/calculators-app/';
+
 function useTheme() {
   const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
 
@@ -37,6 +45,25 @@ function useTheme() {
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab | null>(null);
   const { isDark, toggleTheme } = useTheme();
+  const [showIconNotice, setShowIconNotice] = useState(
+    () => localStorage.getItem('dismissedIconNotice') !== ICON_UPDATE_NOTICE_ID
+  );
+
+  const dismissIconNotice = () => {
+    localStorage.setItem('dismissedIconNotice', ICON_UPDATE_NOTICE_ID);
+    setShowIconNotice(false);
+  };
+
+  const [linkCopied, setLinkCopied] = useState(false);
+  const copyAppLink = async () => {
+    try {
+      await navigator.clipboard.writeText(APP_URL);
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 2000);
+    } catch {
+      // Clipboard API unavailable; the link is still shown as selectable text.
+    }
+  };
 
   const activeTabInfo = tabs.find((tab) => tab.id === activeTab);
 
@@ -140,6 +167,37 @@ export default function App() {
       {/* Main Content */}
       <main className="flex-1 p-4 md:p-8 lg:p-12 overflow-y-auto w-full flex flex-col relative">
         <div className="max-w-4xl mx-auto w-full flex-1 flex flex-col">
+          {showIconNotice && (
+            <div className="mb-6 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800/50 rounded-xl p-4 flex items-start gap-3 text-sm text-amber-800 dark:text-amber-300 shrink-0">
+              <Smartphone className="w-5 h-5 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
+              <div className="flex-1">
+                <p className="font-semibold mb-1">تم تحديث أيقونة التطبيق</p>
+                <p className="leading-relaxed mb-2">
+                  إذا كنت قد أضفت التطبيق إلى الشاشة الرئيسية لهاتفك من قبل، فلن تظهر الأيقونة الجديدة تلقائياً. لرؤيتها: <strong>انسخ رابط التطبيق أولاً</strong> من الأسفل، ثم احذف الاختصار الحالي من شاشتك الرئيسية، وبعدها افتح الرابط من متصفحك وأضفه للشاشة الرئيسية من جديد.
+                </p>
+                <div className="flex items-center gap-2 bg-white/70 dark:bg-slate-900/40 border border-amber-200 dark:border-amber-800/50 rounded-lg p-2">
+                  <span className="flex-1 text-xs font-mono text-amber-900 dark:text-amber-200 truncate select-all" dir="ltr">
+                    {APP_URL}
+                  </span>
+                  <button
+                    onClick={copyAppLink}
+                    className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded-md bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 hover:bg-amber-200 dark:hover:bg-amber-900/70 transition-colors shrink-0"
+                  >
+                    {linkCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                    {linkCopied ? 'تم النسخ' : 'نسخ الرابط'}
+                  </button>
+                </div>
+              </div>
+              <button
+                onClick={dismissIconNotice}
+                className="p-1 text-amber-500 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/50 rounded-lg shrink-0"
+                aria-label="تجاهل"
+                title="تجاهل"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
           <div className="flex-1">
             {activeTab === null ? (
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
