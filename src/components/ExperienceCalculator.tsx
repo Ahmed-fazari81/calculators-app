@@ -24,10 +24,10 @@ export default function ExperienceCalculator() {
 
     const years = differenceInYears(endDateObj, startDateObj);
     const dateAfterYears = addYears(startDateObj, years);
-    
+
     const months = differenceInMonths(endDateObj, dateAfterYears);
     const dateAfterMonths = addMonths(dateAfterYears, months);
-    
+
     const days = differenceInDays(endDateObj, dateAfterMonths);
 
     setExperience({ years, months, days });
@@ -46,51 +46,51 @@ export default function ExperienceCalculator() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-slate-800">حاسبة سنوات الخبرة</h2>
-        <button 
+        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">حاسبة سنوات الخبرة</h2>
+        <button
           onClick={reset}
-          className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+          className="p-2 text-slate-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-full transition-colors"
           title="إعادة تعيين"
         >
           <RotateCcw className="w-5 h-5" />
         </button>
       </div>
 
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+      <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 space-y-4">
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">تاريخ بداية العمل</label>
-          <DateSelector 
-            value={startDate} 
-            onChange={setStartDate} 
-            icon={<Briefcase className="w-5 h-5 text-slate-400" />}
-            colorTheme="blue" 
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">تاريخ بداية العمل</label>
+          <DateSelector
+            value={startDate}
+            onChange={setStartDate}
+            icon={<Briefcase className="w-5 h-5 text-slate-400 dark:text-slate-500" />}
+            colorTheme="blue"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">تاريخ نهاية العمل (أو اليوم)</label>
-          <DateSelector 
-            value={endDate} 
-            onChange={setEndDate} 
-            icon={<CalendarDays className="w-5 h-5 text-slate-400" />}
-            colorTheme="blue" 
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">تاريخ نهاية العمل (أو اليوم)</label>
+          <DateSelector
+            value={endDate}
+            onChange={setEndDate}
+            icon={<CalendarDays className="w-5 h-5 text-slate-400 dark:text-slate-500" />}
+            colorTheme="blue"
           />
         </div>
       </div>
 
       {experience && (
         <div className="grid grid-cols-3 gap-4">
-          <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100 text-center">
-            <div className="text-3xl font-bold text-blue-600">{experience.years}</div>
-            <div className="text-sm font-medium text-blue-800 mt-1">سنة</div>
+          <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-2xl border border-blue-100 dark:border-blue-800/50 text-center">
+            <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{experience.years}</div>
+            <div className="text-sm font-medium text-blue-800 dark:text-blue-300 mt-1">سنة</div>
           </div>
-          <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100 text-center">
-            <div className="text-3xl font-bold text-blue-600">{experience.months}</div>
-            <div className="text-sm font-medium text-blue-800 mt-1">شهر</div>
+          <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-2xl border border-blue-100 dark:border-blue-800/50 text-center">
+            <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{experience.months}</div>
+            <div className="text-sm font-medium text-blue-800 dark:text-blue-300 mt-1">شهر</div>
           </div>
-          <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100 text-center">
-            <div className="text-3xl font-bold text-blue-600">{experience.days}</div>
-            <div className="text-sm font-medium text-blue-800 mt-1">يوم</div>
+          <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-2xl border border-blue-100 dark:border-blue-800/50 text-center">
+            <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{experience.days}</div>
+            <div className="text-sm font-medium text-blue-800 dark:text-blue-300 mt-1">يوم</div>
           </div>
         </div>
       )}
