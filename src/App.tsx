@@ -170,13 +170,13 @@ export default function App() {
           {showIconNotice && (
             <div className="mb-6 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800/50 rounded-xl p-4 flex items-start gap-3 text-sm text-amber-800 dark:text-amber-300 shrink-0">
               <Smartphone className="w-5 h-5 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 <p className="font-semibold mb-1">تم تحديث أيقونة التطبيق</p>
                 <p className="leading-relaxed mb-2">
                   إذا كنت قد أضفت التطبيق إلى الشاشة الرئيسية لهاتفك من قبل، فلن تظهر الأيقونة الجديدة تلقائياً. لرؤيتها: <strong>انسخ رابط التطبيق أولاً</strong> من الأسفل، ثم احذف الاختصار الحالي من شاشتك الرئيسية، وبعدها افتح الرابط من متصفحك وأضفه للشاشة الرئيسية من جديد.
                 </p>
-                <div className="flex items-center gap-2 bg-white/70 dark:bg-slate-900/40 border border-amber-200 dark:border-amber-800/50 rounded-lg p-2">
-                  <span className="flex-1 text-xs font-mono text-amber-900 dark:text-amber-200 truncate select-all" dir="ltr">
+                <div className="flex flex-wrap items-center gap-2 bg-white/70 dark:bg-slate-900/40 border border-amber-200 dark:border-amber-800/50 rounded-lg p-2">
+                  <span className="min-w-0 flex-1 text-xs font-mono text-amber-900 dark:text-amber-200 truncate select-all" dir="ltr">
                     {APP_URL}
                   </span>
                   <button
