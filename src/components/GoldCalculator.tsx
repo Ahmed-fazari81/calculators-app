@@ -5,7 +5,7 @@ export default function GoldCalculator() {
   const [karat, setKarat] = useState<string>('21');
   const [weight, setWeight] = useState<string>('');
   const [makingCharge, setMakingCharge] = useState<string>('');
-  
+
   const [goldPrices, setGoldPrices] = useState<Record<string, number>>({
     '24': 31.50,
     '22': 28.90,
@@ -23,10 +23,10 @@ export default function GoldCalculator() {
       const res = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/xau.json');
       if (!res.ok) throw new Error('Network response was not ok');
       const data = await res.json();
-      
+
       const ounceInOmr = data.xau.omr;
       const gram24k = ounceInOmr / 31.1034768; // 1 Troy Ounce = 31.1034768 grams
-      
+
       setGoldPrices({
         '24': gram24k,
         '22': gram24k * (22 / 24),
@@ -53,7 +53,7 @@ export default function GoldCalculator() {
 
   const parsedWeight = parseFloat(weight) || 0;
   const parsedMakingCharge = parseFloat(makingCharge) || 0;
-  
+
   const pureGoldPrice = parsedWeight * (goldPrices[karat] || 0);
   const totalMakingCharge = parsedWeight * parsedMakingCharge;
   const finalTotalPrice = pureGoldPrice + totalMakingCharge;
@@ -62,21 +62,21 @@ export default function GoldCalculator() {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800">حاسبة الذهب</h2>
-          <p className="text-xs text-red-600 mt-1">يلزم الاتصال بالإنترنت لتحديث الأسعار</p>
+          <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">حاسبة الذهب</h2>
+          <p className="text-xs text-red-600 dark:text-red-400 font-medium mt-1">يلزم الاتصال بالإنترنت لتحديث الأسعار</p>
         </div>
         <div className="flex gap-2">
-          <button 
+          <button
             onClick={reset}
-            className="p-2 text-slate-400 hover:text-yellow-600 hover:bg-yellow-50 rounded-full transition-colors"
+            className="p-2 text-slate-400 dark:text-slate-500 hover:text-yellow-600 dark:hover:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-yellow-900/30 rounded-full transition-colors"
             title="إعادة تعيين"
           >
             <RotateCcw className="w-5 h-5" />
           </button>
-          <button 
+          <button
             onClick={fetchGoldPrices}
             disabled={loading}
-            className={`p-2 text-slate-400 hover:text-yellow-600 hover:bg-yellow-50 rounded-full transition-all ${loading ? 'animate-spin text-yellow-500' : ''}`}
+            className={`p-2 text-slate-400 dark:text-slate-500 hover:text-yellow-600 dark:hover:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-yellow-900/30 rounded-full transition-all ${loading ? 'animate-spin text-yellow-500 dark:text-yellow-400' : ''}`}
             title="تحديث الأسعار"
           >
             <RefreshCw className="w-5 h-5" />
@@ -85,7 +85,7 @@ export default function GoldCalculator() {
       </div>
 
       {error && (
-        <div className="bg-rose-50 text-rose-600 p-3 rounded-xl text-sm text-center border border-rose-100">
+        <div className="bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 p-3 rounded-xl text-sm text-center border border-rose-100 dark:border-rose-800/50">
           تعذر جلب أسعار الذهب المباشرة. يتم عرض آخر أسعار مسجلة.
         </div>
       )}
@@ -111,15 +111,15 @@ export default function GoldCalculator() {
         )}
       </div>
 
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
+      <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* العيار */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">عيار الذهب</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">عيار الذهب</label>
             <select
               value={karat}
               onChange={(e) => setKarat(e.target.value)}
-              className="block w-full p-4 text-base border-slate-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 rounded-xl border bg-slate-50 transition-all"
+              className="block w-full p-4 text-base border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 rounded-xl border bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-100 transition-all"
             >
               <option value="24">عيار 24</option>
               <option value="22">عيار 22</option>
@@ -130,17 +130,17 @@ export default function GoldCalculator() {
 
           {/* الوزن */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">الوزن (بالجرام)</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">الوزن (بالجرام)</label>
             <div className="relative">
               <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                <Scale className="h-5 w-5 text-slate-400" />
+                <Scale className="h-5 w-5 text-slate-400 dark:text-slate-500" />
               </div>
               <input
                 type="number"
                 min="0"
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
-                className="block w-full pr-12 pl-4 py-4 text-lg font-bold border-slate-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 rounded-xl border bg-slate-50 transition-all"
+                className="block w-full pr-12 pl-4 py-4 text-lg font-bold border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 rounded-xl border bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-100 transition-all"
                 placeholder="مثال: 50"
               />
             </div>
@@ -148,17 +148,17 @@ export default function GoldCalculator() {
 
           {/* المصنعية */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">المصنعية للجرام (ر.ع)</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">المصنعية للجرام (ر.ع)</label>
             <div className="relative">
               <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                <HandCoins className="h-5 w-5 text-slate-400" />
+                <HandCoins className="h-5 w-5 text-slate-400 dark:text-slate-500" />
               </div>
               <input
                 type="number"
                 min="0"
                 value={makingCharge}
                 onChange={(e) => setMakingCharge(e.target.value)}
-                className="block w-full pr-12 pl-4 py-4 text-lg font-bold border-slate-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 rounded-xl border bg-slate-50 transition-all"
+                className="block w-full pr-12 pl-4 py-4 text-lg font-bold border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 rounded-xl border bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-100 transition-all"
                 placeholder="مثال: 2.5"
               />
             </div>
@@ -179,13 +179,13 @@ export default function GoldCalculator() {
               <rect width="100%" height="100%" fill="url(#grid)" />
             </svg>
           </div>
-          
+
           <div className="relative z-10">
             <p className="text-center text-yellow-100 font-medium mb-4">التكلفة الإجمالية للذهب</p>
             <div className="text-4xl md:text-5xl font-bold text-center mb-6">
               {finalTotalPrice.toFixed(2)} <span className="text-2xl font-normal opacity-90">ر.ع</span>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4 text-center border-t border-yellow-400/30 pt-4">
               <div>
                 <span className="block text-yellow-100 text-sm mb-1">قيمة الذهب الصافي</span>
