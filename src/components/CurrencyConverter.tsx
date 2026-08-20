@@ -58,8 +58,8 @@ export default function CurrencyConverter() {
     setToCurrency('USD');
   };
 
-  const convertedAmount = rates[toCurrency] 
-    ? (parseFloat(amount || '0') * rates[toCurrency]).toFixed(3) 
+  const convertedAmount = rates[toCurrency]
+    ? (parseFloat(amount || '0') * rates[toCurrency]).toFixed(3)
     : '0.000';
 
   const fromName = CURRENCIES.find(c => c.code === fromCurrency)?.name || fromCurrency;
@@ -69,21 +69,21 @@ export default function CurrencyConverter() {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800">محول العملات</h2>
-          <p className="text-xs text-red-600 mt-1">يلزم الاتصال بالإنترنت لتحديث الأسعار</p>
+          <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">محول العملات</h2>
+          <p className="text-xs text-red-600 dark:text-red-400 font-medium mt-1">يلزم الاتصال بالإنترنت لتحديث الأسعار</p>
         </div>
         <div className="flex gap-2">
-          <button 
+          <button
             onClick={reset}
-            className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-full transition-colors"
+            className="p-2 text-slate-400 dark:text-slate-500 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/30 rounded-full transition-colors"
             title="إعادة تعيين"
           >
             <RotateCcw className="w-5 h-5" />
           </button>
-          <button 
+          <button
             onClick={fetchRates}
             disabled={loading}
-            className={`p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-full transition-all ${loading ? 'animate-spin text-amber-500' : ''}`}
+            className={`p-2 text-slate-400 dark:text-slate-500 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/30 rounded-full transition-all ${loading ? 'animate-spin text-amber-500 dark:text-amber-400' : ''}`}
             title="تحديث الأسعار"
           >
             <RefreshCw className="w-5 h-5" />
@@ -91,10 +91,10 @@ export default function CurrencyConverter() {
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6 relative">
-        
+      <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 space-y-6 relative">
+
         {error && (
-          <div className="bg-rose-50 text-rose-600 p-3 rounded-xl text-sm text-center border border-rose-100">
+          <div className="bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 p-3 rounded-xl text-sm text-center border border-rose-100 dark:border-rose-800/50">
             تعذر جلب أسعار الصرف الحالية. يرجى التحقق من اتصالك بالإنترنت.
           </div>
         )}
@@ -102,14 +102,14 @@ export default function CurrencyConverter() {
         <div className="space-y-4">
           {/* Amount Input */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">المبلغ</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">المبلغ</label>
             <div className="relative">
               <input
                 type="number"
                 min="0"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="block w-full px-4 py-4 text-lg font-bold border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 rounded-xl border bg-slate-50 transition-all"
+                className="block w-full px-4 py-4 text-lg font-bold border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 rounded-xl border bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-100 transition-all"
                 placeholder="أدخل المبلغ"
               />
             </div>
@@ -118,11 +118,11 @@ export default function CurrencyConverter() {
           <div className="flex flex-col md:flex-row items-center gap-4">
             {/* From Currency */}
             <div className="w-full">
-              <label className="block text-sm font-medium text-slate-700 mb-2">من</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">من</label>
               <select
                 value={fromCurrency}
                 onChange={(e) => setFromCurrency(e.target.value)}
-                className="block w-full p-3 text-base border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 rounded-xl border bg-slate-50 transition-all"
+                className="block w-full p-3 text-base border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 rounded-xl border bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-100 transition-all"
               >
                 {CURRENCIES.map(c => (
                   <option key={c.code} value={c.code}>
@@ -136,7 +136,7 @@ export default function CurrencyConverter() {
             <div className="pt-6">
               <button
                 onClick={handleSwap}
-                className="p-3 bg-amber-100 text-amber-600 hover:bg-amber-200 rounded-full transition-colors shadow-sm"
+                className="p-3 bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 hover:bg-amber-200 dark:hover:bg-amber-900/60 rounded-full transition-colors shadow-sm"
               >
                 <ArrowRightLeft className="w-5 h-5" />
               </button>
@@ -144,11 +144,11 @@ export default function CurrencyConverter() {
 
             {/* To Currency */}
             <div className="w-full">
-              <label className="block text-sm font-medium text-slate-700 mb-2">إلى</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">إلى</label>
               <select
                 value={toCurrency}
                 onChange={(e) => setToCurrency(e.target.value)}
-                className="block w-full p-3 text-base border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 rounded-xl border bg-slate-50 transition-all"
+                className="block w-full p-3 text-base border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 rounded-xl border bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-100 transition-all"
               >
                 {CURRENCIES.map(c => (
                   <option key={c.code} value={c.code}>
@@ -174,14 +174,14 @@ export default function CurrencyConverter() {
             <rect width="100%" height="100%" fill="url(#grid)" />
           </svg>
         </div>
-        
+
         <div className="relative z-10 text-center">
           <p className="text-amber-100 font-medium mb-2">النتيجة</p>
           <div className="text-4xl md:text-5xl font-bold flex items-center justify-center gap-2 flex-wrap">
             <span>{loading ? '...' : convertedAmount}</span>
             <span className="text-2xl font-normal opacity-90">{toCurrency}</span>
           </div>
-          
+
           {rates[toCurrency] && !loading && (
             <div className="mt-6 pt-4 border-t border-amber-400/30 text-sm text-amber-100">
               <p>سعر الصرف: 1 {fromName} يعادل {rates[toCurrency]} {toName}</p>
