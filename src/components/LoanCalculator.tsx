@@ -132,10 +132,10 @@ export default function LoanCalculator() {
 
       <div className="bg-indigo-50/50 dark:bg-indigo-950/30 p-5 rounded-xl border border-indigo-100 dark:border-indigo-900/50 flex gap-3 text-sm text-indigo-800 dark:text-indigo-300">
         <Info className="w-6 h-6 shrink-0 mt-0.5 text-indigo-600 dark:text-indigo-400" />
-        <div className="space-y-3 w-full">
-          <p className="font-bold text-base">ملاحظات هامة حول القروض:</p>
+        <div className="w-full divide-y divide-indigo-200/60 dark:divide-indigo-800/40">
+          <p className="font-bold text-base pb-3">ملاحظات هامة حول القروض:</p>
 
-          <div className="bg-white/60 dark:bg-slate-800/60 p-3 rounded-lg border border-indigo-100/50 dark:border-indigo-900/40">
+          <div className="py-3">
             <p className="font-semibold text-indigo-900 dark:text-indigo-200 mb-1">1. لماذا يختلف القسط الفعلي عن الحاسبة؟</p>
             <p className="leading-relaxed mb-2">
               <strong>مثال واقعي:</strong> إذا اقترضت 33,000 ر.ع لمدة 10 سنوات بنسبة فائدة 5%، فإن القسط الحسابي الأساسي هو <strong>350 ر.ع</strong> تقريباً. لكنك قد تجد أن البنك يطلب قسطاً أعلى بكثير!
@@ -148,7 +148,7 @@ export default function LoanCalculator() {
             </ul>
           </div>
 
-          <div className="bg-indigo-100/50 dark:bg-indigo-900/30 p-3 rounded-lg border border-indigo-200/50 dark:border-indigo-800/50">
+          <div className="py-3">
             <p className="font-semibold text-indigo-900 dark:text-indigo-200 mb-1">2. القاعدة الذهبية (تأثير مدة القرض):</p>
             <p className="leading-relaxed mb-2">
               كلما زادت مدة القرض (السنوات)، قلّ القسط الشهري ولكن <strong>تضاعفت أرباح البنك (الفوائد)</strong>.
@@ -158,12 +158,12 @@ export default function LoanCalculator() {
               <li><strong>على 5 سنوات:</strong> القسط 622 ر.ع ⟵ (أرباح البنك = <strong>4,365 ر.ع</strong>)</li>
               <li><strong>على 10 سنوات:</strong> القسط 350 ر.ع ⟵ (أرباح البنك = <strong>9,001 ر.ع</strong>)</li>
             </ul>
-            <p className="mt-2 text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30 p-2 rounded inline-block">
+            <p className="mt-2 text-xs font-bold text-slate-900 bg-lime-300 dark:bg-lime-400 p-2 rounded inline-block">
               الخلاصة: في الـ 10 سنوات، أنت تدفع قسطاً أريح، لكنك تدفع للبنك أكثر من ضعف الفوائد!
             </p>
           </div>
 
-          <div className="bg-indigo-100/50 dark:bg-indigo-900/30 p-3 rounded-lg border border-indigo-200/50 dark:border-indigo-800/50">
+          <div className="py-3">
             <p className="font-semibold text-indigo-900 dark:text-indigo-200 mb-1">3. الفائدة الثابتة مقابل الفائدة المتناقصة:</p>
             <p className="leading-relaxed mb-2">
               <strong>الفائدة الثابتة (Flat):</strong> تُحسب مرة واحدة على كامل مبلغ القرض الأصلي طوال المدة، فتبقى حصة الفائدة في كل قسط ثابتة.
@@ -174,12 +174,12 @@ export default function LoanCalculator() {
               <li><strong>فائدة ثابتة:</strong> القسط 412.5 ر.ع ⟵ (إجمالي الفوائد = <strong>16,500 ر.ع</strong>)</li>
               <li><strong>فائدة متناقصة:</strong> القسط 350 ر.ع ⟵ (إجمالي الفوائد = <strong>9,001 ر.ع</strong>)</li>
             </ul>
-            <p className="mt-2 text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30 p-2 rounded inline-block">
+            <p className="mt-2 text-xs font-bold text-slate-900 bg-lime-300 dark:bg-lime-400 p-2 rounded inline-block">
               نفس المبلغ ونفس النسبة المعلنة، لكن الفائدة الثابتة أغلى بكثير (يقارب ضعف الفوائد تقريباً) لأنها تُحسب على كامل المبلغ الأصلي طوال المدة دون أن تقل — لذلك يجب دائماً السؤال عن طريقة الحساب وليس النسبة فقط.
             </p>
           </div>
 
-          <div className="bg-white/60 dark:bg-slate-800/60 p-3 rounded-lg border border-indigo-100/50 dark:border-indigo-900/40">
+          <div className="py-3">
             <p className="font-semibold text-indigo-900 dark:text-indigo-200 mb-1">4. البنك التقليدي مقابل البنك الإسلامي:</p>
             <p className="leading-relaxed mb-2">
               الفرق بينهما <strong>شرعي وتعاقدي وليس رياضياً</strong>. البنك التقليدي يقرضك مبلغاً مقابل فائدة على الدين، أما البنك الإسلامي (كبنك نزوى، العز الإسلامي، وميثاق التابع لبنك مسقط) فلا يتعامل بالفائدة، بل بعقود بيع أو إيجار أو شراكة:
