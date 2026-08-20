@@ -57,35 +57,35 @@ export default function DateSelector({ value, onChange, icon, colorTheme = 'emer
     : 'focus-within:ring-blue-500 focus-within:border-blue-500';
 
   return (
-    <div className={`flex items-center w-full border border-slate-200 rounded-xl bg-slate-50 transition-all overflow-hidden px-2 focus-within:ring-2 ${ringColor}`}>
+    <div className={`flex items-center w-full border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-900/50 transition-all overflow-hidden px-2 focus-within:ring-2 ${ringColor}`}>
       <select 
         value={day} 
         onChange={(e) => handleDateChange(year, month, e.target.value)}
-        className="flex-1 bg-transparent py-3 px-1 outline-none text-center appearance-none cursor-pointer text-slate-700 font-medium sm:text-sm"
+        className="flex-1 bg-transparent py-3 px-1 outline-none text-center appearance-none cursor-pointer text-slate-700 dark:text-slate-200 font-medium sm:text-sm"
         style={{ textAlignLast: 'center' }}
       >
         <option value="" disabled>اليوم</option>
         {days.map(d => <option key={d} value={d}>{d}</option>)}
       </select>
       
-      <span className="text-slate-300">/</span>
+      <span className="text-slate-300 dark:text-slate-600">/</span>
       
       <select 
         value={month} 
         onChange={(e) => handleDateChange(year, e.target.value, day)}
-        className="flex-1 bg-transparent py-3 px-1 outline-none text-center appearance-none cursor-pointer text-slate-700 font-medium sm:text-sm"
+        className="flex-1 bg-transparent py-3 px-1 outline-none text-center appearance-none cursor-pointer text-slate-700 dark:text-slate-200 font-medium sm:text-sm"
         style={{ textAlignLast: 'center' }}
       >
         <option value="" disabled>الشهر</option>
         {months.map(m => <option key={m} value={m}>{m}</option>)}
       </select>
       
-      <span className="text-slate-300">/</span>
+      <span className="text-slate-300 dark:text-slate-600">/</span>
       
       <select 
         value={year} 
         onChange={(e) => handleDateChange(e.target.value, month, day)}
-        className="flex-[1.2] bg-transparent py-3 px-1 outline-none text-center appearance-none cursor-pointer text-slate-700 font-medium sm:text-sm"
+        className="flex-[1.2] bg-transparent py-3 px-1 outline-none text-center appearance-none cursor-pointer text-slate-700 dark:text-slate-200 font-medium sm:text-sm"
         style={{ textAlignLast: 'center' }}
       >
         <option value="" disabled>السنة</option>
@@ -93,7 +93,7 @@ export default function DateSelector({ value, onChange, icon, colorTheme = 'emer
       </select>
 
       <div className="px-2 pointer-events-none shrink-0">
-        {icon || <CalendarDays className="w-5 h-5 text-slate-400" />}
+        {icon || <CalendarDays className="w-5 h-5 text-slate-400 dark:text-slate-500" />}
       </div>
     </div>
   );
